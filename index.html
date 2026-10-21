@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Dental Micro-CT XR Explorer | Sample S2428</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script>
+    window.litDisableBundleWarning = true;
+  </script>
+
+  <!-- Import Maps for Three.js & Google XR Blocks -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+      "three/": "https://cdn.jsdelivr.net/npm/three@0.186.0/",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/",
+      "@pmndrs/uikit": "https://cdn.jsdelivr.net/npm/@pmndrs/uikit@1.0.64/dist/index.min.js",
+      "@pmndrs/uikit-pub-sub": "https://cdn.jsdelivr.net/npm/@pmndrs/uikit-pub-sub@1.0.64/dist/index.min.js",
+      "@pmndrs/msdfonts": "https://cdn.jsdelivr.net/npm/@pmndrs/msdfonts@1.0.64/dist/index.min.js",
+      "@preact/signals-core": "https://cdn.jsdelivr.net/npm/@preact/signals-core@1.14.0/dist/signals-core.mjs",
+      "yoga-layout/load": "https://cdn.jsdelivr.net/npm/yoga-layout@3.2.1/dist/src/load.js",
+      "lit": "https://esm.sh/lit@3.3.1",
+      "lit/": "https://esm.sh/lit@3.3.1/",
+      "three-pathfinding": "https://cdn.jsdelivr.net/npm/three-pathfinding@1.3.0/dist/three-pathfinding.module.js",
+      "xrblocks": "https://cdn.jsdelivr.net/gh/google/xrblocks@build/xrblocks.js",
+      "xrblocks/": "https://cdn.jsdelivr.net/gh/google/xrblocks@build/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Loading Splash Screen -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-title">Loading Dental Micro-CT Scan</div>
+    <div class="loading-subtitle" id="loading-subtitle">Initializing WebXR volume...</div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="header-badge">
+      <span class="title">Micro-CT Dental Explorer</span>
+      <span class="tag">S2428</span>
+      <span class="tag" id="stat-slices">230 Slices</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" id="btn-recenter" title="Recenter in view">
+        <span>🎯 Recenter</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 2D Fallback Floating Controller (Synchronized with 3D XR Blocks UI) -->
+  <div id="screen-controls">
+    <div class="controls-header" id="controls-toggle">
+      <div class="controls-title">
+        <span>🔬 Slice & Density Controls</span>
+      </div>
+      <span class="toggle-icon">▼</span>
+    </div>
+
+    <!-- Depth / Slice Slider -->
+    <div class="control-row">
+      <div class="control-label">
+        <span>Depth Slice</span>
+        <span class="val" id="depth-val">115 / 230 (11.96 mm)</span>
+      </div>
+      <input type="range" class="slider-input" id="slider-depth" min="0" max="229" value="115" step="1" />
+    </div>
+
+    <!-- Density / Window Level Slider -->
+    <div class="control-row">
+      <div class="control-label">
+        <span>Density / Window Level</span>
+        <span class="val" id="density-val">50%</span>
+      </div>
+      <input type="range" class="slider-input" id="slider-density" min="0" max="100" value="50" step="1" />
+    </div>
+
+    <!-- Window Width / Contrast Slider -->
+    <div class="control-row">
+      <div class="control-label">
+        <span>Window Width (Contrast)</span>
+        <span class="val" id="width-val">70%</span>
+      </div>
+      <input type="range" class="slider-input" id="slider-width" min="5" max="100" value="70" step="1" />
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="button-group">
+      <button class="btn-secondary" id="btn-colormap">False-Color Heatmap</button>
+      <button class="btn-secondary" id="btn-play">▶ Auto-Play</button>
+      <button class="btn-secondary" id="btn-reset">Reset</button>
+    </div>
+  </div>
+
+  <!-- Desktop Instructions Overlay -->
+  <div id="instructions">
+    <span>💡 Desktop: Drag to orbit. Use 3D Spatial UI or bottom sliders. WebXR: Pinch/trigger sliders in AR.</span>
+  </div>
+
+  <!-- Application Script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -53,53 +53,116 @@
       <span class="tag" id="stat-slices">230 Slices</span>
     </div>
     <div class="header-actions">
+      <button class="btn-icon active" id="btn-toggle-view" title="Toggle 3D Meshes & Slices">
+        <span id="btn-toggle-view-text">🦷 3D Meshes</span>
+      </button>
       <button class="btn-icon" id="btn-recenter" title="Recenter in view">
         <span>🎯 Recenter</span>
       </button>
     </div>
   </header>
 
-  <!-- 2D Fallback Floating Controller (Synchronized with 3D XR Blocks UI) -->
+  <!-- 2D Floating Controller (Synchronized with 3D XR Blocks UI) -->
   <div id="screen-controls">
     <div class="controls-header" id="controls-toggle">
       <div class="controls-title">
-        <span>🔬 Slice & Density Controls</span>
+        <span id="controls-title-text">🦷 3D Meshes & Depth Densities</span>
       </div>
       <span class="toggle-icon">▼</span>
     </div>
 
-    <!-- Depth / Slice Slider -->
-    <div class="control-row">
-      <div class="control-label">
-        <span>Depth Slice</span>
-        <span class="val" id="depth-val">115 / 230 (11.96 mm)</span>
-      </div>
-      <input type="range" class="slider-input" id="slider-depth" min="0" max="229" value="115" step="1" />
+    <!-- View Mode Segmented Selector -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-mesh" data-mode="mesh">🦷 3D Meshes</button>
+      <button class="mode-tab" id="tab-slice" data-mode="slice">🔬 2D Slices</button>
+      <button class="mode-tab" id="tab-combined" data-mode="combined">✨ Combined</button>
     </div>
 
-    <!-- Density / Window Level Slider -->
-    <div class="control-row">
-      <div class="control-label">
-        <span>Density / Window Level</span>
-        <span class="val" id="density-val">50%</span>
+    <!-- 3D Polygonal Mesh Controls -->
+    <div id="mesh-controls-group" class="controls-section">
+      <!-- Layer Peel / Depth Slider -->
+      <div class="control-row">
+        <div class="control-label">
+          <span>Layer Peel (Density Depth)</span>
+          <span class="val" id="peel-val">All 5 Layers (Full Tooth)</span>
+        </div>
+        <input type="range" class="slider-input" id="slider-peel" min="1" max="5" value="5" step="1" />
       </div>
-      <input type="range" class="slider-input" id="slider-density" min="0" max="100" value="50" step="1" />
+
+      <!-- 5 Density Layer Toggle Chips -->
+      <div class="control-row">
+        <div class="control-label">
+          <span>Toggle Individual Layers</span>
+        </div>
+        <div class="layer-chips" id="layer-chips">
+          <button class="layer-chip active" data-layer="Density_1_PulpCanal" style="--chip-color: #ef4444;" title="Pulp chamber and root canal lumen">
+            <span class="dot"></span>Pulp Canal
+          </button>
+          <button class="layer-chip active" data-layer="Density_2_InnerDentin" style="--chip-color: #f59e0b;" title="Predentin / deep dentinal tubule boundary">
+            <span class="dot"></span>Inner Dentin
+          </button>
+          <button class="layer-chip active" data-layer="Density_3_BulkDentin" style="--chip-color: #e2e8f0;" title="Bulk mineralized dentin and cementum">
+            <span class="dot"></span>Bulk Dentin
+          </button>
+          <button class="layer-chip active" data-layer="Density_4_DEJ_Boundary" style="--chip-color: #38bdf8;" title="Dentin-Enamel Junction (DEJ)">
+            <span class="dot"></span>DEJ Boundary
+          </button>
+          <button class="layer-chip active" data-layer="Density_5_EnamelCap" style="--chip-color: #ffffff;" title="Hyper-dense outer enamel crown">
+            <span class="dot"></span>Enamel Cap
+          </button>
+        </div>
+      </div>
+
+      <!-- Enamel Opacity Slider -->
+      <div class="control-row">
+        <div class="control-label">
+          <span>Enamel Translucency</span>
+          <span class="val" id="enamel-opacity-val">35%</span>
+        </div>
+        <input type="range" class="slider-input" id="slider-enamel-opacity" min="0" max="100" value="35" step="5" />
+      </div>
     </div>
 
-    <!-- Window Width / Contrast Slider -->
-    <div class="control-row">
-      <div class="control-label">
-        <span>Window Width (Contrast)</span>
-        <span class="val" id="width-val">70%</span>
+    <!-- 2D Micro-CT Slice Controls -->
+    <div id="slice-controls-group" class="controls-section" style="display: none;">
+      <!-- Depth / Slice Slider -->
+      <div class="control-row">
+        <div class="control-label">
+          <span>Depth Slice</span>
+          <span class="val" id="depth-val">115 / 230 (11.96 mm)</span>
+        </div>
+        <input type="range" class="slider-input" id="slider-depth" min="0" max="229" value="115" step="1" />
       </div>
-      <input type="range" class="slider-input" id="slider-width" min="5" max="100" value="70" step="1" />
+
+      <!-- Density / Window Level Slider -->
+      <div class="control-row">
+        <div class="control-label">
+          <span>Density / Window Level</span>
+          <span class="val" id="density-val">50%</span>
+        </div>
+        <input type="range" class="slider-input" id="slider-density" min="0" max="100" value="50" step="1" />
+      </div>
+
+      <!-- Window Width / Contrast Slider -->
+      <div class="control-row">
+        <div class="control-label">
+          <span>Window Width (Contrast)</span>
+          <span class="val" id="width-val">70%</span>
+        </div>
+        <input type="range" class="slider-input" id="slider-width" min="5" max="100" value="70" step="1" />
+      </div>
+
+      <!-- Slice Action Buttons -->
+      <div class="button-group">
+        <button class="btn-secondary" id="btn-colormap">False-Color Heatmap</button>
+        <button class="btn-secondary" id="btn-play">▶ Auto-Play</button>
+      </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="button-group">
-      <button class="btn-secondary" id="btn-colormap">False-Color Heatmap</button>
-      <button class="btn-secondary" id="btn-play">▶ Auto-Play</button>
-      <button class="btn-secondary" id="btn-reset">Reset</button>
+    <!-- Global Reset -->
+    <div class="button-group" style="margin-top: 4px;">
+      <button class="btn-secondary" id="btn-isolate-pulp" title="Isolate pulp and root canal">🔴 View Pulp Canal Only</button>
+      <button class="btn-secondary" id="btn-reset">Reset All</button>
     </div>
   </div>
 

@@ -163,6 +163,12 @@ header.app-header {
   transform: translateY(-1px);
 }
 
+.btn-icon.active {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
 /* 2D Fallback Floating Controller (collapsible) */
 #screen-controls {
   position: fixed;
@@ -180,7 +186,7 @@ header.app-header {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
@@ -201,6 +207,109 @@ header.app-header {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* View Mode Segmented Bar */
+.mode-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px;
+  border-radius: 12px;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mode-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.mode-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-tab.active {
+  background: var(--primary-gradient);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 5 Density Layer Toggle Chips */
+.layer-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.layer-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.layer-chip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--chip-color, #ffffff);
+  box-shadow: 0 0 6px var(--chip-color, #ffffff);
+  display: inline-block;
+  transition: opacity 0.2s ease;
+}
+
+.layer-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.layer-chip.active {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--chip-color, #ffffff);
+}
+
+.layer-chip.inactive {
+  opacity: 0.42;
+  border-color: transparent;
+  background: rgba(255, 255, 255, 0.02);
+  text-decoration: line-through;
+}
+
+.layer-chip.inactive .dot {
+  opacity: 0.3;
+  box-shadow: none;
 }
 
 .toggle-icon {

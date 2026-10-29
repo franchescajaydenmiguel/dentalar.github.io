@@ -35,9 +35,33 @@ Because 1.5 GB exceeds GitHub Pages recommended limits and would crash mobile We
    - **Compressed Dataset**: **12.05 MB** (**>99.2% reduction**)
    - Full dataset loads in seconds and fits well within GitHub Pages limits.
 
-### Running the Converter
+### Running the Slice Converter
 ```bash
-py scripts/convert_dicom.py --input_dir "C:\Users\felix\OneDrive\Desktop\AR Project\S2428" --stride 8 --scale 0.5 --format png
+py scripts/convert_dicom.py --input_dir "S2428" --stride 8 --scale 0.5 --format png
+```
+
+---
+
+## 🦷 5-Mesh Polygonal 3D GLB Architecture
+
+In addition to 2D slice scrubbing, the scan can be visualized as a **single performant GLB container** (`data/tooth_5_densities.glb`) containing 5 distinct polygonal meshes representing depth densities and anatomical compartments:
+
+1. **`Density_1_PulpCanal`** (Isovalue 7,500): Internal pulp chamber and root canal lumen (Crimson Red).
+2. **`Density_2_InnerDentin`** (Isovalue 13,500): Predentin and inner dentinal tubule boundary (Amber).
+3. **`Density_3_BulkDentin`** (Isovalue 17,500): Bulk mineralized dentin and cementum (Ivory Bone).
+4. **`Density_4_DEJ_Boundary`** (Isovalue 20,500): Dentin-Enamel Junction transition interface (Cyan Mineral).
+5. **`Density_5_EnamelCap`** (Isovalue 22,500): Hyper-dense coronal enamel cap (Translucent Pearl).
+
+### Features:
+* **Interactive Layer Peeling**: A depth slider smoothly peels layers from enamel down to the internal pulp cavity.
+* **Independent Layer Toggles**: Clickable chips allow toggling individual layers on or off.
+* **Enamel Translucency**: Tune outer enamel opacity to view internal structures while preserving the coronal silhouette.
+* **Dual/Combined Mode**: View the 3D polygonal tooth and the live 2D CT cutting plane simultaneously.
+* **Ultra-Lightweight**: Only **3.26 MB** and **~200,000 triangles** total, running at 90+ FPS in WebXR.
+
+### Running the GLB Converter
+```bash
+py scripts/dicom_to_glb.py --input_dir "S2428" --output "data/tooth_5_densities.glb" --stride 8 --scale 0.5 --max_faces 40000
 ```
 
 ---

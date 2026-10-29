@@ -250,5 +250,43 @@
     "slice_0227.png",
     "slice_0228.png",
     "slice_0229.png"
+  ],
+  "glb_path": "data/tooth_5_densities.glb",
+  "density_layers": [
+    {
+      "id": "Density_1_PulpCanal",
+      "name": "Pulp Canal",
+      "label": "Pulp Chamber & Root Canal",
+      "iso": 7500,
+      "color": "#ef4444"
+    },
+    {
+      "id": "Density_2_InnerDentin",
+      "name": "Inner Dentin",
+      "label": "Predentin / Deep Dentin",
+      "iso": 13500,
+      "color": "#f59e0b"
+    },
+    {
+      "id": "Density_3_BulkDentin",
+      "name": "Bulk Dentin",
+      "label": "Main Mineralized Dentin",
+      "iso": 17500,
+      "color": "#e2e8f0"
+    },
+    {
+      "id": "Density_4_DEJ_Boundary",
+      "name": "DEJ Boundary",
+      "label": "Dentin-Enamel Junction",
+      "iso": 20500,
+      "color": "#38bdf8"
+    },
+    {
+      "id": "Density_5_EnamelCap",
+      "name": "Enamel Cap",
+      "label": "Hyper-dense Enamel Crown",
+      "iso": 22500,
+      "color": "#ffffff"
+    }
   ]
 }

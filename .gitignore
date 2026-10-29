@@ -1,0 +1,17 @@
+# Raw Micro-CT scan dataset (1.5 GB uncompressed DICOM slices)
+S2428/
+*.DCM*
+*.dcm
+
+# Python & Environment caches
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+
+# OS / Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

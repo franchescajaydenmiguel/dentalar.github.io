@@ -80,6 +80,7 @@
 
     <!-- 3D Polygonal Mesh Controls -->
     <div id="mesh-controls-group" class="controls-section">
+      <p class="model-status" role="note">Density-based preview: the SCANCO STL and original DICOM have not yet been registered or anatomically validated. Colors are illustrative region candidates.</p>
       <!-- Layer Peel / Depth Slider -->
       <div class="control-row">
         <div class="control-label">
@@ -96,30 +97,46 @@
         </div>
         <div class="layer-chips" id="layer-chips">
           <button class="layer-chip active" data-layer="Density_1_PulpCanal" style="--chip-color: #ef4444;" title="Pulp chamber and root canal lumen">
-            <span class="dot"></span>Pulp Canal
+            <span class="dot"></span>Pulp Chamber &amp; Root Canal
           </button>
-          <button class="layer-chip active" data-layer="Density_2_InnerDentin" style="--chip-color: #f59e0b;" title="Predentin / deep dentinal tubule boundary">
+          <button class="layer-chip active" data-layer="Density_2_InnerDentin" style="--chip-color: #f59e0b;" title="Inner Dentin">
             <span class="dot"></span>Inner Dentin
           </button>
-          <button class="layer-chip active" data-layer="Density_3_BulkDentin" style="--chip-color: #e2e8f0;" title="Bulk mineralized dentin and cementum">
-            <span class="dot"></span>Bulk Dentin
+          <button class="layer-chip active" data-layer="Density_3_BulkDentin" style="--chip-color: #e2e8f0;" title="Outer Dentin">
+            <span class="dot"></span>Outer Dentin
           </button>
-          <button class="layer-chip active" data-layer="Density_4_DEJ_Boundary" style="--chip-color: #38bdf8;" title="Dentin-Enamel Junction (DEJ)">
-            <span class="dot"></span>DEJ Boundary
+          <button class="layer-chip active" data-layer="Density_4_DEJ_Boundary" style="--chip-color: #38bdf8;" title="Dentin–Enamel Junction (DEJ)">
+            <span class="dot"></span>Dentin–Enamel Junction (DEJ)
           </button>
-          <button class="layer-chip active" data-layer="Density_5_EnamelCap" style="--chip-color: #ffffff;" title="Hyper-dense outer enamel crown">
-            <span class="dot"></span>Enamel Cap
+          <button class="layer-chip active" data-layer="Density_5_EnamelCap" style="--chip-color: #ffffff;" title="Enamel">
+            <span class="dot"></span>Enamel
           </button>
         </div>
       </div>
 
-      <!-- Enamel Opacity Slider -->
+      <!-- Independent anatomical region opacity controls -->
+      <div class="control-row">
+        <div class="control-label"><label for="opacity-pulp">Pulp Chamber &amp; Root Canal opacity</label><span class="val" data-opacity-value="Density_1_PulpCanal">100%</span></div>
+        <input type="range" class="slider-input" id="opacity-pulp" data-opacity-layer="Density_1_PulpCanal" min="0" max="100" value="100" step="5" />
+      </div>
+      <div class="control-row">
+        <div class="control-label"><label for="opacity-inner">Inner Dentin opacity</label><span class="val" data-opacity-value="Density_2_InnerDentin">85%</span></div>
+        <input type="range" class="slider-input" id="opacity-inner" data-opacity-layer="Density_2_InnerDentin" min="0" max="100" value="85" step="5" />
+      </div>
+      <div class="control-row">
+        <div class="control-label"><label for="opacity-outer">Outer Dentin opacity</label><span class="val" data-opacity-value="Density_3_BulkDentin">80%</span></div>
+        <input type="range" class="slider-input" id="opacity-outer" data-opacity-layer="Density_3_BulkDentin" min="0" max="100" value="80" step="5" />
+      </div>
+      <div class="control-row">
+        <div class="control-label"><label for="opacity-dej">Dentin–Enamel Junction (DEJ) opacity</label><span class="val" data-opacity-value="Density_4_DEJ_Boundary">65%</span></div>
+        <input type="range" class="slider-input" id="opacity-dej" data-opacity-layer="Density_4_DEJ_Boundary" min="0" max="100" value="65" step="5" />
+      </div>
       <div class="control-row">
         <div class="control-label">
-          <span>Enamel Translucency</span>
-          <span class="val" id="enamel-opacity-val">35%</span>
+          <label for="slider-enamel-opacity">Enamel opacity</label>
+          <span class="val" id="enamel-opacity-val" data-opacity-value="Density_5_EnamelCap">35%</span>
         </div>
-        <input type="range" class="slider-input" id="slider-enamel-opacity" min="0" max="100" value="35" step="5" />
+        <input type="range" class="slider-input" id="slider-enamel-opacity" data-opacity-layer="Density_5_EnamelCap" min="0" max="100" value="35" step="5" />
       </div>
     </div>
 
@@ -161,7 +178,7 @@
 
     <!-- Global Reset -->
     <div class="button-group" style="margin-top: 4px;">
-      <button class="btn-secondary" id="btn-isolate-pulp" title="Isolate pulp and root canal">🔴 View Pulp Canal Only</button>
+      <button class="btn-secondary" id="btn-isolate-pulp" title="Isolate Pulp Chamber &amp; Root Canal">🔴 View Pulp Chamber &amp; Root Canal Only</button>
       <button class="btn-secondary" id="btn-reset">Reset All</button>
     </div>
   </div>

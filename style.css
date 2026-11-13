@@ -255,6 +255,15 @@ header.app-header {
 }
 
 /* 5 Density Layer Toggle Chips */
+.model-status {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+  border-left: 3px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+}
+
 .layer-chips {
   display: flex;
   flex-wrap: wrap;

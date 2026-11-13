@@ -20,6 +20,13 @@ const state = {
   // 3D Polygonal Mesh state
   peelLevel: 5, // 1 (Pulp only) to 5 (Full Tooth)
   enamelOpacity: 35, // 0 to 100%
+  layerOpacity: {
+    Density_1_PulpCanal: 100,
+    Density_2_InnerDentin: 85,
+    Density_3_BulkDentin: 80,
+    Density_4_DEJ_Boundary: 65,
+    Density_5_EnamelCap: 35,
+  },
   layerVisibility: {
     Density_1_PulpCanal: true,
     Density_2_InnerDentin: true,
@@ -38,10 +45,10 @@ const LAYER_ORDER = [
 ];
 
 const PEEL_LABELS = {
-  1: '1/5: Pulp & Canal Only',
+  1: '1/5: Pulp Chamber & Root Canal',
   2: '2/5: + Inner Dentin',
-  3: '3/5: + Bulk Dentin',
-  4: '4/5: + DEJ Boundary',
+  3: '3/5: + Outer Dentin',
+  4: '4/5: + Dentin–Enamel Junction (DEJ)',
   5: 'All 5 Layers (Full Tooth)',
 };
 
@@ -231,6 +238,15 @@ function loadToothGLB() {
               child.material.opacity = state.enamelOpacity / 100;
               child.material.depthWrite = false;
             }
+            if (Object.hasOwn(state.layerOpacity, child.name)) {
+              const alpha = state.layerOpacity[child.name] / 100;
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+              materials.forEach((material) => {
+                material.opacity = alpha;
+                material.transparent = alpha < 1;
+                material.depthWrite = alpha >= 1;
+              });
+            }
           }
         });
 
@@ -327,6 +343,7 @@ function setPeelLevel(level, updateDom = true, updateSpatial = true) {
     if (chip) {
       chip.classList.toggle('active', isVisible);
       chip.classList.toggle('inactive', !isVisible);
+      chip.setAttribute('aria-pressed', String(isVisible));
     }
   });
 
@@ -356,26 +373,42 @@ function toggleIndividualLayer(layerId) {
   if (chip) {
     chip.classList.toggle('active', next);
     chip.classList.toggle('inactive', !next);
+    chip.setAttribute('aria-pressed', String(next));
   }
 }
 
 /**
  * Set enamel translucency.
  */
-function setEnamelOpacity(value, updateDom = true) {
-  state.enamelOpacity = Number(value);
-  const enamelMesh = meshLayers.get('Density_5_EnamelCap');
-  if (enamelMesh) {
-    const alpha = state.enamelOpacity / 100;
-    enamelMesh.material.opacity = alpha;
-    enamelMesh.material.transparent = alpha < 1.0;
-    enamelMesh.material.depthWrite = alpha >= 0.99;
+function setLayerOpacity(layerId, value) {
+  if (!Object.hasOwn(state.layerOpacity, layerId)) return;
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return;
+  const percentage = Math.max(0, Math.min(100, numeric));
+  state.layerOpacity[layerId] = percentage;
+  const mesh = meshLayers.get(layerId);
+  if (mesh) {
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    materials.forEach((material) => {
+      material.opacity = percentage / 100;
+      material.transparent = percentage < 100;
+      material.depthWrite = percentage >= 100;
+      material.needsUpdate = true;
+    });
   }
+  const slider = document.querySelector(`[data-opacity-layer="${layerId}"]`);
+  const output = document.querySelector(`[data-opacity-value="${layerId}"]`);
+  if (slider) slider.value = percentage;
+  if (output) output.textContent = `${percentage}%`;
+  if (layerId === 'Density_5_EnamelCap') {
+    state.enamelOpacity = percentage;
+    if (dom.sliderEnamelOpacity) dom.sliderEnamelOpacity.value = percentage;
+    if (dom.enamelOpacityVal) dom.enamelOpacityVal.textContent = `${percentage}%`;
+  }
+}
 
-  if (updateDom) {
-    if (dom.sliderEnamelOpacity) dom.sliderEnamelOpacity.value = state.enamelOpacity;
-    if (dom.enamelOpacityVal) dom.enamelOpacityVal.textContent = `${state.enamelOpacity}%`;
-  }
+function setEnamelOpacity(value) {
+  setLayerOpacity('Density_5_EnamelCap', value);
 }
 
 /**
@@ -516,7 +549,7 @@ function togglePlay() {
 function resetSettings() {
   setViewMode('mesh');
   setPeelLevel(5);
-  setEnamelOpacity(35);
+  [100, 85, 80, 65, 35].forEach((opacity, index) => setLayerOpacity(LAYER_ORDER[index], opacity));
   setSlice(Math.floor(state.totalSlices / 2));
   setDensity(50);
   setWindowWidth(70);
@@ -806,7 +839,7 @@ class DentalViewerScene extends xb.Script {
           },
           children: [
             new xb.UIText({
-              text: 'Peel Layers (Pulp -> Enamel)',
+              text: 'Peel Anatomical Regions',
               style: { fontSize: 13, color: '#e2e8f0' },
             }),
             spatialPeelText,
@@ -887,11 +920,12 @@ function initDomEvents() {
     });
   }
 
-  // Enamel Opacity Slider
-  if (dom.sliderEnamelOpacity) {
-    dom.sliderEnamelOpacity.addEventListener('input', (e) => setEnamelOpacity(e.target.value, true));
-  }
-
+  // Independent region opacity sliders
+  document.querySelectorAll('[data-opacity-layer]').forEach((slider) => {
+    slider.addEventListener('input', (event) => {
+      setLayerOpacity(slider.dataset.opacityLayer, event.target.value);
+    });
+  });
   // Isolate Pulp Button
   if (dom.btnIsolatePulp) {
     dom.btnIsolatePulp.addEventListener('click', isolatePulp);
@@ -977,7 +1011,7 @@ async function main() {
     {
       header: 'Dental 5-Mesh Density Explorer',
       description:
-        'Inspect the 5 distinct anatomical density layers. Use the Peel slider or click individual layers to reveal internal root canal anatomy.',
+        'Explore the density-based preview using region toggles and opacity controls. Anatomical segmentation has not yet been validated against the original STL and DICOM.',
     },
   ];
 

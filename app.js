@@ -54,6 +54,7 @@ let sliceMaterial = null;
 let sliceMesh = null;
 let volumeBox = null;
 let volumeGroup = null;
+let anatomyGroup = null;
 let gltfToothGroup = null;
 const meshLayers = new Map();
 
@@ -233,8 +234,8 @@ function loadToothGLB() {
           }
         });
 
-        if (volumeGroup) {
-          volumeGroup.add(gltfToothGroup);
+        if (anatomyGroup) {
+          anatomyGroup.add(gltfToothGroup);
         }
 
         console.log(`Loaded GLB with ${meshLayers.size} density meshes:`, Array.from(meshLayers.keys()));
@@ -553,6 +554,12 @@ class DentalViewerScene extends xb.Script {
     // Default position: floating conveniently in front of user in AR space
     volumeGroup.position.set(-0.15, 1.35, -0.9);
 
+    // Flip the tooth and CT slices together without changing the source GLB.
+    // Keep the cage, pedestal, and grid upright; recentering preserves this flip.
+    anatomyGroup = new THREE.Group();
+    anatomyGroup.rotation.x = Math.PI;
+    volumeGroup.add(anatomyGroup);
+
     const boxWidth = 0.22; // ~22 cm
     const boxHeight = 0.24; // ~24 cm
     const boxDepth = 0.20; // ~20 cm
@@ -658,7 +665,7 @@ class DentalViewerScene extends xb.Script {
     sliceMesh.rotation.x = -Math.PI / 2;
     sliceMesh.position.y = 0;
     sliceMesh.visible = false; // Initial mode is 'mesh'
-    volumeGroup.add(sliceMesh);
+    anatomyGroup.add(sliceMesh);
 
     const haloGeo = new THREE.EdgesGeometry(planeGeo);
     const halo = new THREE.LineSegments(
